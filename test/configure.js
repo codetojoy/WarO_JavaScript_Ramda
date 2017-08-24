@@ -45,4 +45,11 @@ describe('configure', function() {
         assert.equal(0, result.players[1].total)
         assert.equal(0, result.players[2].total)
     })
+
+    it('adds numPlayers', function() {
+        // test
+        const result = configure(state)
+
+        assert.equal(3, result.numPlayers)
+    })
 })
