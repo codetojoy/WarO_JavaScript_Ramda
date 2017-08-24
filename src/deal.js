@@ -16,18 +16,12 @@ function helloKitty(deck, numCardsPerHand) {
 }
 
 function dealToPlayers(state, deck) {
-    let newPlayers = []
-    const numCardsPerHand = state.numCardsPerHand
-
-    R.times(function (playerIndex) {
-        const hand = R.take(numCardsPerHand, deck)
-        deck = removeCards(hand, deck)
-        const player = state.players[playerIndex]
-        const newPlayer = R.assoc('hand', hand, player)
-        newPlayers.push(newPlayer)
-    }, state.numPlayers)
-
-    return newPlayers
+    return R.reduce( (players, player) => {
+            const hand = R.take(state.numCardsPerHand, deck)
+            deck = removeCards(hand, deck)
+            const newPlayer = R.assoc('hand', hand, player)
+            return R.append(newPlayer, players)
+        }, [], state.players)
 }
 
 // This doesn't feel very 'functional', but rather 'imperative'..
