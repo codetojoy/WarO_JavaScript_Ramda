@@ -15,9 +15,10 @@ players: [
 ]
 };
 
-let state = configure(initState)
+R.compose(
+    R.curry(logObject)('state'),
+    deal,
+    configure
+)(initState)
 
-state = deal(state)
-
-logObject('state', state)
 
