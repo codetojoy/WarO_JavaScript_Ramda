@@ -1,8 +1,7 @@
 
 const assert = require('assert')
 
-const {shuffleDeck, removeCards, 
-       helloKitty, dealToPlayers, deal} = require('../src/deal')
+const {shuffleDeck,helloKitty,dealToPlayers,deal} = require('../src/deal')
 
 const configure = require('../src/configure') 
 
@@ -14,19 +13,6 @@ describe('shuffleDeck', function() {
         const result = shuffleDeck(numCards) 
 
         assert.equal(numCards, result.length)
-    })
-})
-
-describe('removeCards', function() {
-    const numCards = 6
-
-    it('basic', function() {
-        const deck = shuffleDeck(numCards) 
-
-        // test
-        const result = removeCards([1,2], deck)
-
-        assert.equal(4, result.length)
     })
 })
 

@@ -6,19 +6,16 @@ const shuffle = require('../src/shuffle');
 const shuffleDeck = (numCards) => 
     shuffle(R.times(R.pipe(R.inc, R.identity), numCards))
 
-const removeCards = (cards, deck) => 
-    R.filter(R.complement(R.contains(R.__, cards)), deck)
-
 function helloKitty(deck, numCardsPerHand) {
     const kitty = R.take(numCardsPerHand, deck)
-    const newDeck = removeCards(kitty, deck)
+    const newDeck = R.difference(deck, kitty)
     return R.pair(kitty, newDeck);
 }
 
 function dealToPlayers(state, deck) {
     return R.reduce( (players, player) => {
             const hand = R.take(state.numCardsPerHand, deck)
-            deck = removeCards(hand, deck)
+            deck = R.difference(deck, hand)
             const newPlayer = R.assoc('hand', hand, player)
             return R.append(newPlayer, players)
         }, [], state.players)
@@ -43,7 +40,6 @@ function deal(state) {
 }
 
 module.exports.shuffleDeck = shuffleDeck 
-module.exports.removeCards = removeCards 
 module.exports.helloKitty = helloKitty
 module.exports.dealToPlayers = dealToPlayers
 module.exports.deal = deal
