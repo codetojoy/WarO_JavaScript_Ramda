@@ -3,30 +3,9 @@ const assert = require('assert')
 
 const {applyStrategy} = require('../src/strategy')
 
-/*
-describe('specific strategies', function() {
-    const hand = [19,69,11,18]
-    const prizeCard = 7
-
-    it('maxCard basic', function() {
-        // test
-        const result = maxCard(prizeCard, hand)
-
-        assert.equal(69, result)
-    })
-
-    it('minCard basic', function() {
-        // test
-        const result = minCard(prizeCard, hand)
-
-        assert.equal(11, result)
-    })
-})
-*/
-
 describe('strategies', function() {
     const hand = [19,69,11,18]
-    const prizeCard = 7
+    let prizeCard = 7
 
     it('popCard basic', function() {
         // test
@@ -52,6 +31,17 @@ describe('strategies', function() {
         [bid, newHand] = applyStrategy('minCard', prizeCard, hand)
 
         assert.equal(11, bid)
+        assert.equal(3, newHand.length)
+    })
+
+    it('nearestCard basic', function() {
+        const p = 17
+
+        // test
+        let bid, newHand
+        [bid, newHand] = applyStrategy('nearestCard', p, hand)
+
+        assert.equal(18, bid)
         assert.equal(3, newHand.length)
     })
 })

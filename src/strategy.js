@@ -6,20 +6,14 @@ function bidAndNewHand(bid, hand) {
     return R.pair(bid, newHand)
 }
 
-function popCard(prizeCard, hand) {
-    const bid = R.head(hand)
-    return bidAndNewHand(bid, hand)
-    // const newHand = R.drop(1, hand)
-    // return R.pair(bid, newHand)
-}
+const popCard = (prizeCard, hand) => bidAndNewHand(R.head(hand), hand)
+const maxCard = (prizeCard, hand) => bidAndNewHand(Math.max(...hand), hand)
+const minCard = (prizeCard, hand) => bidAndNewHand(Math.min(...hand), hand)
 
-function maxCard(prizeCard, hand) {
-    const bid = Math.max(...hand)
-    return bidAndNewHand(bid, hand)
-}
-
-function minCard(prizeCard, hand) {
-    const bid = Math.min(...hand)
+const nearestCard = (prizeCard, hand) => {
+    const distance = (x,y) => Math.abs(x - y)
+    const distanceFromPrize = R.curry(distance)(prizeCard)
+    const bid = R.reduce(R.minBy(distanceFromPrize), Infinity, hand)
     return bidAndNewHand(bid, hand)
 }
 
@@ -32,7 +26,9 @@ function applyStrategy(strategy, prizeCard, hand) {
         result = maxCard(prizeCard, hand)
     } else if (strategy == 'minCard') {
         result = minCard(prizeCard, hand)
-    } 
+    } else if (strategy == 'nearestCard') {
+        result = nearestCard(prizeCard, hand)
+    }
 
     return result
 }
