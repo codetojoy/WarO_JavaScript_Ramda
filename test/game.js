@@ -70,13 +70,6 @@ describe('findWinner', function() {
         assert.equal(true, newState.players[0].isWinner)
         assert.equal(false, newState.players[1].isWinner)
         assert.equal(false, newState.players[2].isWinner)
-        // oh dear:
-        assert.equal(10, newState.players[0].bid)
-        assert.equal(3, newState.players[1].bid)
-        assert.equal(4, newState.players[2].bid)
-        assert.equal(2, newState.players[0].hand.length)
-        assert.equal(2, newState.players[1].hand.length)
-        assert.equal(2, newState.players[2].hand.length)
     })
 })
 
@@ -95,10 +88,6 @@ describe('adjustWinnerAndLosers', function() {
         assert.equal(1, newState.players[0].roundsWon)
         assert.equal(0, newState.players[1].roundsWon)
         assert.equal(0, newState.players[2].roundsWon)
-        // oh dear:
-        assert.equal(2, newState.players[0].hand.length)
-        assert.equal(2, newState.players[1].hand.length)
-        assert.equal(2, newState.players[2].hand.length)
     })
 })
 
@@ -115,10 +104,6 @@ describe('playRound', function() {
         assert.equal(0, newState.players[0].roundsWon)
         assert.equal(1, newState.players[1].roundsWon)
         assert.equal(0, newState.players[2].roundsWon)
-        // oh dear:
-        assert.equal(2, newState.players[0].hand.length)
-        assert.equal(2, newState.players[1].hand.length)
-        assert.equal(2, newState.players[2].hand.length)
     })
 })
 
