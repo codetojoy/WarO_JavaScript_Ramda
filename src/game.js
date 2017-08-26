@@ -79,10 +79,33 @@ function play(state) {
     return newState
 }
 
+function verifyEndState(state) {
+    let isOK = true
+    const playerTotals = R.sum(R.map(p => p.total, state.players))
+    const kittyTotals = R.sum(state.kitty)
+
+    if (playerTotals != kittyTotals) {
+        console.log('TRACER internal error on totals!')
+        isOk = false
+    }
+
+    const playerRoundsWon = R.sum(R.map(p => p.roundsWon, state.players))
+    
+    if (playerRoundsWon != state.numCardsPerHand) {
+        console.log('TRACER internal error on roundsWon!')
+        isOk = false
+    }
+
+    if (isOK) { console.log('verified.') }
+
+    return state
+}
+
 module.exports.getBid = getBid
 module.exports.getBids = getBids
 module.exports.findWinner = findWinner
 module.exports.adjustWinnerAndLosers = adjustWinnerAndLosers
 module.exports.playRound = playRound
 module.exports.play = play
+module.exports.verifyEndState = verifyEndState
 
