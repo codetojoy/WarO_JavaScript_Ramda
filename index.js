@@ -4,7 +4,7 @@ const R = require('ramda')
 const configure = require('./src/configure')
 const logObject = require('./src/util')
 const {deal} = require('./src/deal')
-const {playRound, play} = require('./src/game') 
+const {play} = require('./src/game') 
 
 const initState = {
     numCards: 16,

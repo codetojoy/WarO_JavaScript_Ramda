@@ -44,12 +44,13 @@ describe('getBid', function() {
 })
 
 describe('getBids', function() {
-    it('basic', function() {
+    it('should request bids and alter hands', function() {
         const prizeCard = 5
 
         // test
         const newState = getBids(prizeCard, mockState)        
     
+        // TODO: gah!
         assert.equal(10, newState.players[0].bid)
         assert.equal(3, newState.players[1].bid)
         assert.equal(4, newState.players[2].bid)
@@ -60,7 +61,7 @@ describe('getBids', function() {
 })
 
 describe('findWinner', function() {
-    it('basic', function() {
+    it('should identify the highest bidder', function() {
         const prizeCard = 5
         const state = getBids(prizeCard, mockState)        
 
@@ -74,7 +75,7 @@ describe('findWinner', function() {
 })
 
 describe('adjustWinnerAndLosers', function() {
-    it('basic', function() {
+    it('should award points to winner', function() {
         const prizeCard = 5
         let state = getBids(prizeCard, mockState)        
         state = findWinner(state)        
@@ -82,6 +83,7 @@ describe('adjustWinnerAndLosers', function() {
         // test
         const newState = adjustWinnerAndLosers(prizeCard, state)
     
+        // TODO: gah!
         assert.equal(5, newState.players[0].total)
         assert.equal(0, newState.players[1].total)
         assert.equal(0, newState.players[2].total)
@@ -92,12 +94,13 @@ describe('adjustWinnerAndLosers', function() {
 })
 
 describe('playRound', function() {
-    it('basic', function() {
+    it('should play a round of the game', function() {
         const prizeCard = 5
 
         // test
         const newState = playRound(prizeCard, mockState2)
     
+        // TODO: gah!
         assert.equal(0, newState.players[0].total)
         assert.equal(5, newState.players[1].total)
         assert.equal(0, newState.players[2].total)
@@ -107,8 +110,8 @@ describe('playRound', function() {
     })
 })
 
-describe('playRound', function() {
-    it('basic', function() {
+describe('play', function() {
+    it('should play a full game', function() {
         // test
         const newState = play(mockState3)
     
