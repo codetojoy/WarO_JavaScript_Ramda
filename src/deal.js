@@ -1,45 +1,44 @@
 
-const R = require('ramda');
+const R = require('ramda')
 
-const shuffle = require('../src/shuffle');
+const shuffle = require('../src/shuffle')
 
 const shuffleDeck = (numCards) => 
     shuffle(R.times(R.pipe(R.inc, R.identity), numCards))
 
-function helloKitty(deck, numCardsPerHand) {
-    const kitty = R.take(numCardsPerHand, deck)
-    const newDeck = R.difference(deck, kitty)
-    return R.pair(kitty, newDeck);
+function partition(deck, numCardsPerPlayer) {
+    return R.values(R.groupBy(card => {
+        const index = R.indexOf(card, deck)
+        return R.toString(Math.floor(index / numCardsPerPlayer))
+    }, deck))
 }
 
-function dealToPlayers(state, deck) {
-    return R.reduce( (players, player) => {
-            const hand = R.take(state.numCardsPerHand, deck)
-            deck = R.difference(deck, hand)
-            const newPlayer = R.assoc('hand', hand, player)
-            return R.append(newPlayer, players)
-        }, [], state.players)
-}
+const helloKitty = (hands) => 
+    R.pair(R.head(hands), R.slice(1, Infinity, hands))
 
-// This doesn't feel very 'functional', but rather 'imperative'..
+const dealToPlayers = (state, hands) => 
+    R.zipWith((player, hand) => 
+        R.assoc('hand', hand, player)
+    , state.players, hands)
+
 function deal(state) {
-    const deck = shuffleDeck(state.numCards)
-    const numCardsPerHand = state.numCardsPerHand
+    const hands = partition(shuffleDeck(state.numCards), state.numCardsPerHand) 
 
-    let kitty, newDeck
-    [kitty, newDeck] = helloKitty(deck, numCardsPerHand)
+    let kitty, otherHands
+    [kitty, otherHands] = helloKitty(hands)
 
-    const newPlayers = dealToPlayers(state, newDeck)
+    const newPlayers = dealToPlayers(state, otherHands)
 
     const newState = R.compose(
         R.assoc('kitty', kitty),
         R.assoc('players', newPlayers)
     )(state)
 
-    return newState;
+    return newState
 }
 
 module.exports.shuffleDeck = shuffleDeck 
+module.exports.partition = partition 
 module.exports.helloKitty = helloKitty
 module.exports.dealToPlayers = dealToPlayers
 module.exports.deal = deal

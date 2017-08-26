@@ -1,7 +1,8 @@
 
 const assert = require('assert')
 
-const {shuffleDeck,helloKitty,dealToPlayers,deal} = require('../src/deal')
+const {shuffleDeck,partition,helloKitty,
+        dealToPlayers,deal} = require('../src/deal')
 
 const configure = require('../src/configure') 
 
@@ -16,20 +17,43 @@ describe('shuffleDeck', function() {
     })
 })
 
-describe('helloKitty', function() {
-    const numCards = 16
-    const numPlayers = 3
-    const numCardsPerHand = numCards / (numPlayers + 1) 
+describe('partition', function() {
+    const numCards = 60
+    const numPlayers = 4
+    const numActors = numPlayers + 1 // include kitty
+    const numCardsPerHand = numCards / numActors
 
     it('basic', function() {
         const deck = shuffleDeck(numCards) 
 
         // test
-        let kitty, remainingDeck
-        [kitty, remainingDeck] = helloKitty(deck, numCardsPerHand) 
+        const hands = partition(deck, numCardsPerHand) 
 
-        assert.equal(numCardsPerHand, kitty.length)
-        assert.equal(numCards - numCardsPerHand, remainingDeck.length)
+        assert.equal(numActors, hands.length)
+        hands.forEach((hand) => assert.equal(numCardsPerHand, hand.length)) 
+    })
+})
+
+describe('helloKitty', function() {
+    const numCards = 16
+    const numPlayers = 3
+    const numActors = numPlayers + 1
+    const numCardsPerPlayer = numCards / numActors
+
+    it('basic', function() {
+        const deck = shuffleDeck(numCards) 
+        const hands = partition(deck, numCardsPerPlayer)
+
+        assert.equal(numActors, hands.length)
+        hands.forEach((hand) => assert.equal(numCardsPerPlayer, hand.length)) 
+
+        // test
+        let kitty, otherHands
+        [kitty, otherHands] = helloKitty(hands)
+
+        assert.equal(numCardsPerPlayer, kitty.length)
+        assert.equal(numPlayers, otherHands.length)
+        otherHands.forEach((hand) => assert.equal(numCardsPerPlayer, hand.length)) 
     })
 })
 
@@ -48,12 +72,14 @@ describe('dealToPlayers', function() {
         const numCards = state.numCards
         const numCardsPerHand = state.numCardsPerHand
         const deck = shuffleDeck(numCards) 
-        let kitty, remainingDeck
-        [kitty, remainingDeck] = helloKitty(deck, numCardsPerHand) 
-
+        const hands = partition(deck, numCardsPerHand)
+        let kitty, otherHands
+        [kitty, otherHands] = helloKitty(hands, numCardsPerHand) 
+        
         // test
-        newPlayers = dealToPlayers(state, remainingDeck) 
+        const newPlayers = dealToPlayers(state, otherHands) 
 
+        assert.equal(3, newPlayers.length)
         assert.equal(numCardsPerHand, newPlayers[0].hand.length)
         assert.equal(numCardsPerHand, newPlayers[1].hand.length)
         assert.equal(numCardsPerHand, newPlayers[2].hand.length)
