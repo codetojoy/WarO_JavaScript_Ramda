@@ -48,7 +48,7 @@ describe('getBids', function() {
         const prizeCard = 5
 
         // test
-        const newState = getBids(mockState, prizeCard)        
+        const newState = getBids(prizeCard, mockState)        
     
         assert.equal(10, newState.players[0].bid)
         assert.equal(3, newState.players[1].bid)
@@ -62,10 +62,10 @@ describe('getBids', function() {
 describe('findWinner', function() {
     it('basic', function() {
         const prizeCard = 5
-        const state = getBids(mockState, prizeCard)        
+        const state = getBids(prizeCard, mockState)        
 
         // test
-        const newState = findWinner(state, prizeCard)        
+        const newState = findWinner(state)        
     
         assert.equal(true, newState.players[0].isWinner)
         assert.equal(false, newState.players[1].isWinner)
@@ -80,14 +80,14 @@ describe('findWinner', function() {
     })
 })
 
-describe('awardWinnerAndLosers', function() {
+describe('adjustWinnerAndLosers', function() {
     it('basic', function() {
         const prizeCard = 5
-        let state = getBids(mockState, prizeCard)        
-        state = findWinner(state, prizeCard)        
+        let state = getBids(prizeCard, mockState)        
+        state = findWinner(state)        
 
         // test
-        const newState = adjustWinnerAndLosers(state, prizeCard)
+        const newState = adjustWinnerAndLosers(prizeCard, state)
     
         assert.equal(5, newState.players[0].total)
         assert.equal(0, newState.players[1].total)
@@ -107,7 +107,7 @@ describe('playRound', function() {
         const prizeCard = 5
 
         // test
-        const newState = playRound(mockState2, prizeCard)
+        const newState = playRound(prizeCard, mockState2)
     
         assert.equal(0, newState.players[0].total)
         assert.equal(5, newState.players[1].total)

@@ -27,12 +27,10 @@ function getBid(prizeCard, player) {
     return newPlayer
 }
 
-function getBids(state, prizeCard) {
-    const newPlayers = R.map(function (player) {
-        return getBid(prizeCard, player)
-    }, state.players)
-    const newState = R.assoc('players', newPlayers, state)
-    return newState    
+function getBids(prizeCard, state) {
+    const getBidForPrize = R.curry(getBid)(prizeCard) 
+    const newPlayers = R.map(getBidForPrize, state.players)
+    return R.assoc('players', newPlayers, state)
 }
 
 function findWinner(state) {
@@ -47,41 +45,36 @@ function findWinner(state) {
     return newState
 }
 
-function adjustWinnerAndLosers(state, prizeCard) {
+function adjustWinnerAndLosers(prizeCard, state) {
     const newPlayers = R.map(function (player) {
-        let newPlayer = player 
-        if (player.isWinner) {
-            const roundsWon = player.roundsWon
-            const total = player.total
-            newPlayer = R.compose(
-                            R.assoc('roundsWon', roundsWon + 1),
-                            R.assoc('total', total + prizeCard)
-                        )(player) 
-        } 
-        let newPlayer2 = R.compose(
-                            R.dissoc('bid'),
-                            R.dissoc('isWinner')
-                         )(newPlayer) 
-        return newPlayer2
+        return R.ifElse( (p) => p.isWinner ,
+                         R.compose(
+                             R.assoc('roundsWon', player.roundsWon + 1),
+                             R.assoc('total', player.total + prizeCard),
+                             R.dissoc('bid'),
+                             R.dissoc('isWinner')),
+                         R.compose( R.dissoc('bid'), R.dissoc('isWinner'))
+               )(player)
     }, state.players)
     const newState = R.assoc('players', newPlayers, state)
 
     return newState
 }
 
-function playRound(state, prizeCard) {
-    let newState = getBids(state, prizeCard)
-    newState = findWinner(newState)
-    newState = adjustWinnerAndLosers(newState, prizeCard)
-    return newState
+function playRound(prizeCard, state) {
+    return R.compose(
+        R.curry(adjustWinnerAndLosers)(prizeCard),
+        findWinner,
+        R.curry(getBids)(prizeCard)
+    )(state)
 }
 
 function play(state) {
     const kitty = R.view(kittyLens, state)
 
-    const newState = R.reduce(function (state, prizeCard) {
-        return playRound(state, prizeCard)
-    }, state, kitty)
+    const newState = R.reduce(
+        (state, prizeCard) => playRound(prizeCard, state)
+    , state, kitty)
 
     return newState
 }
