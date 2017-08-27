@@ -13,9 +13,6 @@ function partition(deck, numCardsPerPlayer) {
     }, deck))
 }
 
-const helloKitty = (hands) => 
-    R.pair(R.head(hands), R.slice(1, Infinity, hands))
-
 const dealToPlayers = (state, hands) => 
     R.zipWith((player, hand) => 
         R.assoc('hand', hand, player)
@@ -25,13 +22,11 @@ function deal(state) {
     const hands = partition(shuffleDeck(state.numCards), state.numCardsPerHand) 
 
     let kitty, otherHands
-    [kitty, otherHands] = helloKitty(hands)
-
-    const newPlayers = dealToPlayers(state, otherHands)
+    [kitty, otherHands] = R.pair(R.head(hands), R.slice(1, Infinity, hands))
 
     const newState = R.compose(
         R.assoc('kitty', kitty),
-        R.assoc('players', newPlayers)
+        R.assoc('players', dealToPlayers(state, otherHands))
     )(state)
 
     return newState
@@ -39,6 +34,5 @@ function deal(state) {
 
 module.exports.shuffleDeck = shuffleDeck 
 module.exports.partition = partition 
-module.exports.helloKitty = helloKitty
 module.exports.dealToPlayers = dealToPlayers
 module.exports.deal = deal

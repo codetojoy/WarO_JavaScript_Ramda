@@ -1,8 +1,7 @@
 
 const assert = require('assert')
 
-const {shuffleDeck,partition,helloKitty,
-        dealToPlayers,deal} = require('../src/deal')
+const {shuffleDeck,partition,dealToPlayers,deal} = require('../src/deal')
 
 const configure = require('../src/configure') 
 
@@ -34,29 +33,6 @@ describe('partition', function() {
     })
 })
 
-describe('helloKitty', function() {
-    const numCards = 16
-    const numPlayers = 3
-    const numActors = numPlayers + 1
-    const numCardsPerPlayer = numCards / numActors
-
-    it('basic', function() {
-        const deck = shuffleDeck(numCards) 
-        const hands = partition(deck, numCardsPerPlayer)
-
-        assert.equal(numActors, hands.length)
-        hands.forEach((hand) => assert.equal(numCardsPerPlayer, hand.length)) 
-
-        // test
-        let kitty, otherHands
-        [kitty, otherHands] = helloKitty(hands)
-
-        assert.equal(numCardsPerPlayer, kitty.length)
-        assert.equal(numPlayers, otherHands.length)
-        otherHands.forEach((hand) => assert.equal(numCardsPerPlayer, hand.length)) 
-    })
-})
-
 describe('dealToPlayers', function() {
     const initState  = {
         numCards: 16,
@@ -73,8 +49,7 @@ describe('dealToPlayers', function() {
         const numCardsPerHand = state.numCardsPerHand
         const deck = shuffleDeck(numCards) 
         const hands = partition(deck, numCardsPerHand)
-        let kitty, otherHands
-        [kitty, otherHands] = helloKitty(hands, numCardsPerHand) 
+        const otherHands = hands.slice(1,Infinity)
         
         // test
         const newPlayers = dealToPlayers(state, otherHands) 
