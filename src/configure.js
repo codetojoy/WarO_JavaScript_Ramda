@@ -1,5 +1,5 @@
 
-const R = require('ramda');
+const R = require('ramda')
 
 function configure(state) {
     const newPlayers = R.map(R.compose(
