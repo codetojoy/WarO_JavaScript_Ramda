@@ -20,6 +20,7 @@ const nearestCard = (prizeCard, hand) => {
 function applyStrategy(strategy, prizeCard, hand) {
     let result = popCard(prizeCard, hand)
 
+    // TODO: use R.cond here ?
     if (strategy == 'popCard') {
         result = popCard(prizeCard, hand)
     } else if (strategy == 'maxCard') {
