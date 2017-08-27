@@ -1,10 +1,7 @@
 
 const R = require('ramda')
 
-function bidAndNewHand(bid, hand) {
-    const newHand = R.without([bid], hand) 
-    return R.pair(bid, newHand)
-}
+const bidAndNewHand = (bid, hand) => R.pair(bid, R.without([bid], hand))  
 
 const popCard = (prizeCard, hand) => bidAndNewHand(R.head(hand), hand)
 const maxCard = (prizeCard, hand) => bidAndNewHand(Math.max(...hand), hand)
