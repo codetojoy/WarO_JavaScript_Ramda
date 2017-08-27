@@ -79,12 +79,14 @@ function play(state) {
     return newState
 }
 
-function isEndStateOK(players, kitty, numCardsPerHand) {
-    return R.and(
-               R.equals(R.sum(kitty), R.sum(R.map(p => p.total, players))), 
-               R.equals(numCardsPerHand, R.sum(R.map(p => p.roundsWon, players)))
-           )
-}
+const sameTotal = (players, kitty, numCardsPerHand) =>
+    R.equals(R.sum(kitty), R.sum(R.map(p => p.total, players)))
+
+const sameRoundsWon = (players, kitty, numCardsPerHand) =>
+   R.equals(numCardsPerHand, R.sum(R.map(p => p.roundsWon, players)))
+
+const isEndStateOK = (players, kitty, numCardsPerHand) =>
+    R.both(sameTotal, sameRoundsWon)(players, kitty, numCardsPerHand) 
 
 function verifyEndState(state) {
     R.ifElse(
