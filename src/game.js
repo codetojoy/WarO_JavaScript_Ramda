@@ -79,24 +79,19 @@ function play(state) {
     return newState
 }
 
+function isEndStateOK(players, kitty, numCardsPerHand) {
+    return R.and(
+               R.equals(R.sum(kitty), R.sum(R.map(p => p.total, players))), 
+               R.equals(numCardsPerHand, R.sum(R.map(p => p.roundsWon, players)))
+           )
+}
+
 function verifyEndState(state) {
-    let isOK = true
-    const playerTotals = R.sum(R.map(p => p.total, state.players))
-    const kittyTotals = R.sum(state.kitty)
-
-    if (playerTotals != kittyTotals) {
-        console.log('TRACER internal error on totals!')
-        isOk = false
-    }
-
-    const playerRoundsWon = R.sum(R.map(p => p.roundsWon, state.players))
-    
-    if (playerRoundsWon != state.numCardsPerHand) {
-        console.log('TRACER internal error on roundsWon!')
-        isOk = false
-    }
-
-    if (isOK) { console.log('verified.') }
+    R.ifElse(
+        () => isEndStateOK(state.players, state.kitty, state.numCardsPerHand),
+        () => console.log('verified.'),
+        () => console.log('VERIFY FAILED') 
+    )
 
     return state
 }
@@ -108,4 +103,3 @@ module.exports.adjustWinnerAndLosers = adjustWinnerAndLosers
 module.exports.playRound = playRound
 module.exports.play = play
 module.exports.verifyEndState = verifyEndState
-
