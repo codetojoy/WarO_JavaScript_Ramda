@@ -91,7 +91,7 @@ function verifyEndState(state) {
         () => isEndStateOK(state.players, state.kitty, state.numCardsPerHand),
         () => console.log('verified.'),
         () => console.log('VERIFY FAILED') 
-    )
+    )(state)
 
     return state
 }
@@ -103,3 +103,4 @@ module.exports.adjustWinnerAndLosers = adjustWinnerAndLosers
 module.exports.playRound = playRound
 module.exports.play = play
 module.exports.verifyEndState = verifyEndState
+module.exports.isEndStateOK = isEndStateOK

@@ -2,7 +2,8 @@
 const assert = require('assert')
 
 const {getBid, getBids, findWinner,
-       adjustWinnerAndLosers, playRound, play} = require('../src/game')
+       adjustWinnerAndLosers, playRound, 
+       play, isEndStateOK} = require('../src/game')
 
 const mockState = {
 numCards: 16,
@@ -29,6 +30,7 @@ players: [
 {name:'Alice',strategy:'popCard',hand:[2,3,9],total:0,roundsWon:0},
 {name:'Bob',  strategy:'popCard',hand:[1,4,8],total:0,roundsWon:0}
 ]}
+
 
 describe('getBid', function() {
     it('basic', function() {
@@ -124,4 +126,65 @@ describe('play', function() {
     })
 })
 
+describe('isEndStateOK', function() {
+    it('should verify a correct game', function() {
+        const endState = {
+            numCards: 12,
+            numCardsPerHand: 3,
+            numPlayers: 3,
+            kitty: [5,6,7],
+            players: [
+            {name:'Alice',strategy:'popCard',hand:[2,3,9],total:12,roundsWon:2},
+            {name:'Bob',  strategy:'popCard',hand:[1,4,8],total:6,roundsWon:1}
+        ]}
+        const players = endState.players
+        const kitty = endState.kitty
+        const numCardsPerHand = endState.numCardsPerHand
+
+        // test
+        const result = isEndStateOK(players, kitty, numCardsPerHand)
+    
+        assert.equal(true, result)
+    })
+
+    it('should detect wrong player totals', function() {
+        const endState = {
+            numCards: 12,
+            numCardsPerHand: 3,
+            numPlayers: 3,
+            kitty: [5,6,7],
+            players: [
+            {name:'Alice',strategy:'popCard',hand:[2,3,9],total:12,roundsWon:2},
+            {name:'Bob',  strategy:'popCard',hand:[1,4,8],total:0,roundsWon:1}
+        ]}
+        const players = endState.players
+        const kitty = endState.kitty
+        const numCardsPerHand = endState.numCardsPerHand
+
+        // test
+        const result = isEndStateOK(players, kitty, numCardsPerHand)
+    
+        assert.equal(false, result)
+    })
+
+    it('should detect wrong roundsWon', function() {
+        const endState = {
+            numCards: 12,
+            numCardsPerHand: 3,
+            numPlayers: 3,
+            kitty: [5,6,7],
+            players: [
+            {name:'Alice',strategy:'popCard',hand:[2,3,9],total:12,roundsWon:2},
+            {name:'Bob',  strategy:'popCard',hand:[1,4,8],total:6,roundsWon:0}
+        ]}
+        const players = endState.players
+        const kitty = endState.kitty
+        const numCardsPerHand = endState.numCardsPerHand
+
+        // test
+        const result = isEndStateOK(players, kitty, numCardsPerHand)
+    
+        assert.equal(false, result)
+    })
+})
 
