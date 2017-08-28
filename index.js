@@ -16,9 +16,10 @@ const initState = {
 }
 
 const log = R.curry(logObject)('state')
+const verify = R.tap(verifyEndState)
 
 R.compose(
-    verifyEndState,
+    verify,
     log,
     play,
     log,

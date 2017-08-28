@@ -7,12 +7,6 @@ const bidLens = R.lensProp('bid')
 const handLens = R.lensProp('hand')
 const kittyLens = R.lensProp('kitty')
 
-function popCard(prizeCard, hand) {
-    const bid = R.head(hand)
-    const newHand = R.drop(1, hand)
-    return R.pair(bid, newHand)
-}
-
 function getBid(prizeCard, player) {
     const hand = R.view(handLens, player)
 
